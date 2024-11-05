@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EventHandlerImplBase.hpp"
-#include "ThreadPool.hpp"
 
 #include <utility>
 #include <queue>
@@ -42,9 +41,9 @@ public:
    */
   virtual EventHandlerAsyncResult on_event_async(const void* psender, const T& arg) = 0;
 
-protected:
-  EventHandlerImpl() : thread_pool_(ThreadPool(2, 0)) {}
-  ThreadPool thread_pool_;
+// protected:
+//   EventHandlerImpl() : thread_pool_(ThreadPool(2, 0)) {}
+//   ThreadPool thread_pool_;
 };
 
 /**
@@ -67,11 +66,11 @@ public:
    * @param[in] psender Pointer to the sender.
    * @return EventHandlerAsyncResult Return std::future<bool> as execution result to wait or get operation status.
    */
-  virtual EventHandlerAsyncResult on_event_async(const void* psender) = 0;
+  //virtual EventHandlerAsyncResult on_event_async(const void* psender) = 0;
 
-protected:
-  EventHandlerImpl() : thread_pool_(ThreadPool(2, 0)) {}
-  ThreadPool thread_pool_;
+// protected:
+//   EventHandlerImpl() : thread_pool_(ThreadPool(2, 0)) {}
+//   ThreadPool thread_pool_;
 };
 
 /**
@@ -97,13 +96,13 @@ public:
    * @param[in] arg Passed argument.
    * @return EventHandlerAsyncResult Return std::future<bool> as execution result to wait or get operation status.
    */
-  virtual EventHandlerAsyncResult on_event_async(const void* psender, const T& arg) override final
-  {
-    Task task;
-    auto result = task.assign(pFunction_, psender, arg);
-    this->thread_pool_.push_task(task);
-    return result;
-  }
+  // virtual EventHandlerAsyncResult on_event_async(const void* psender, const T& arg) override final
+  // {
+  //   Task task;
+  //   auto result = task.assign(pFunction_, psender, arg);
+  //   this->thread_pool_.push_task(task);
+  //   return result;
+  // }
 
   /**
    * @brief Call handler via pointer to function.
@@ -168,13 +167,13 @@ public:
    * @param[in] arg Passed argument.
    * @return EventHandlerAsyncResult Return std::future<bool> as execution result to wait or get operation status.
    */
-  virtual EventHandlerAsyncResult on_event_async(const void* psender, const T& arg) override final
-  {
-    Task task;
-    auto result = task.assign(pCaller_, pMemberFunction_, psender, arg);
-    this->thread_pool_.push_task(task);
-    return result;
-  }
+  // virtual EventHandlerAsyncResult on_event_async(const void* psender, const T& arg) override final
+  // {
+  //   Task task;
+  //   auto result = task.assign(pCaller_, pMemberFunction_, psender, arg);
+  //   this->thread_pool_.push_task(task);
+  //   return result;
+  // }
 
   /**
    * @brief Call handler via pointer to object and pointer to class method.
@@ -238,13 +237,13 @@ public:
    * @param[in] psender Pointer to the sender.
    * @return EventHandlerAsyncResult Return std::future<bool> as execution result to wait or get operation status.
    */
-  virtual EventHandlerAsyncResult on_event_async(const void* psender) override final
-  {
-    Task task;
-    auto result = task.assign(pFunction_, psender);
-    thread_pool_.push_task(task);
-    return result;
-  }
+  // virtual EventHandlerAsyncResult on_event_async(const void* psender) override final
+  // {
+  //   Task task;
+  //   auto result = task.assign(pFunction_, psender);
+  //   thread_pool_.push_task(task);
+  //   return result;
+  // }
 
   /**
    * @brief Call handler via pointer to function.
@@ -306,13 +305,13 @@ public:
    * @param[in] psender Pointer to the sender.
    * @return EventHandlerAsyncResult Return std::future<bool> as execution result to wait or get operation status.
    */
-  virtual EventHandlerAsyncResult on_event_async(const void* psender) override final
-  {
-    Task task;
-    auto result = task.assign(pCaller_, pMemberFunction_, psender);
-    thread_pool_.push_task(task);
-    return result;
-  }
+  // virtual EventHandlerAsyncResult on_event_async(const void* psender) override final
+  // {
+  //   Task task;
+  //   auto result = task.assign(pCaller_, pMemberFunction_, psender);
+  //   thread_pool_.push_task(task);
+  //   return result;
+  // }
 
   /**
    * @brief Call handler via pointer to object and pointer to class method.

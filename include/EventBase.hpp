@@ -83,7 +83,7 @@ protected:
   virtual ~EventBase() = default;
 
 protected:
-  std::vector<EventHandlerImplPtr<T> > handlers_;
+  std::vector<EventHandlerImplPtr<T>> handlers_;
   std::shared_mutex mutex_;
 };
 }  // namespace core

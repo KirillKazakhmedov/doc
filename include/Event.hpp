@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ThreadPoolExecutable.hpp"
 #include "EventBase.hpp"
 
 namespace core {
@@ -11,7 +12,7 @@ namespace core {
  * @tparam T Template parameter contains argument for observers/sunscribers.
  */
 template <typename T>
-class Event : public EventBase<T> {
+class Event : public EventBase<T>, public ThreadPoolExecutable {
   using EventBase<T>::mutex_;
   using EventBase<T>::handlers_;
 
@@ -40,6 +41,11 @@ public:
    */
   std::vector<EventHandlerAsyncResult> notify_async(const void* psender, const T& arg)
   {
+  //   Task task;
+  //   auto result = task.assign(pCaller_, pMemberFunction_, psender, arg);
+  //   this->thread_pool_.push_task(task);
+  //   return result;
+
     std::vector<EventHandlerAsyncResult> results;
     results.reserve(handlers_.size());
     std::shared_lock lock(mutex_);
@@ -57,7 +63,7 @@ public:
  * Notification may be occured in sync and async modes.
  */
 template <>
-class Event<void> : public EventBase<void> {
+class Event<void> : public EventBase<void>, public ThreadPoolExecutable {
   using EventBase<void>::mutex_;
   using EventBase<void>::handlers_;
 
