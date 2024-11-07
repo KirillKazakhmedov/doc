@@ -30,7 +30,7 @@ public:
     std::shared_lock lock(mutex_);
     for (const auto& pHandler : handlers_) {
       if (pHandler)
-        pHandler->on_event(psender, arg);
+        pHandler->OnEvent(psender, arg);
     }
   }
   /**
@@ -53,7 +53,7 @@ public:
     for (const auto& pHandler : handlers_) {
       if (pHandler) {
             Task task;
-            auto result = task.assign(pHandler.get(), &EventHandlerImpl<T>::on_event, psender, arg);
+            auto result = task.assign(pHandler.get(), &EventHandlerImpl<T>::OnEvent, psender, arg);
             thread_pool_->push_task(task);
             results.push_back(std::move(result));
       }
@@ -80,7 +80,7 @@ public:
     std::shared_lock lock(mutex_);
     for (const auto& pHandler : handlers_) {
       if (pHandler)
-        pHandler->on_event(psender);
+        pHandler->OnEvent(psender);
     }
   }
 
@@ -102,7 +102,7 @@ public:
     for (const auto& pHandler : handlers_) {
       if (pHandler) {
         Task task;
-        auto result = task.assign(pHandler.get(), &EventHandlerImpl<void>::on_event, psender);
+        auto result = task.assign(pHandler.get(), &EventHandlerImpl<void>::OnEvent, psender);
         thread_pool_->push_task(task);
         results.emplace_back(std::move(result));
       }

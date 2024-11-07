@@ -1,4 +1,5 @@
 find_package(GTest REQUIRED)
+include(GoogleTest)
 
 set(TEST_PROJECT ${PROJECT_NAME}_test)
 
@@ -9,12 +10,12 @@ add_executable(
   ${SOURCES_CPP_TEST}
 )
 
+target_include_directories(${TEST_PROJECT} PRIVATE 
+${INC_DIR}
+)
+
 target_link_libraries(${TEST_PROJECT} PRIVATE 
     GTest::gtest
-    GTest::gtest_main)
+    GTest::gmock)
 
-gtest_add_tests(TARGET ${TEST_PROJECT}
-    TEST_SUFFIX .noArgs
-    TEST_LIST noArgsTests
-)
-set_tests_properties(${noArgsTests} PROPERTIES TIMEOUT 10)
+gtest_discover_tests(${TEST_PROJECT})

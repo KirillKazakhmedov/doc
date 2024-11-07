@@ -17,7 +17,6 @@ using EventHandlerImplPtr = std::unique_ptr<EventHandlerImpl<T>>;
 
 /**
  * @brief Interface class for implementing subscriber notification methods.
- * Notification can be done synchronously(on_event) and asynchronously(on_event_async).
  * @tparam T Passed argument type.
  */
 template <typename T>
@@ -29,25 +28,11 @@ public:
    * @param[in] psender Pointer to the sender.
    * @param[in] arg Passed argument.
    */
-  virtual void on_event(const void* psender, const T& arg) = 0;
-  /**
-   * @brief Implement this method to notify subscribers asynchronously.
-   * The method takes a pointer to the sender and a passed argument.
-   * It is recommended to use thread pool for asynchronous notification.
-   * @param[in] psender Pointer to the sender.
-   * @param[in] arg Passed argument.
-   * @return AsyncResult Return std::future<bool> as execution result to wait or get operation status.
-   */
-  //virtual EventHandlerAsyncResult on_event_async(const void* psender, const T& arg) = 0;
-
-// protected:
-//   EventHandlerImpl() : thread_pool_(ThreadPool(2, 0)) {}
-//   ThreadPool thread_pool_;
+  virtual void OnEvent(const void* psender, const T& arg) = 0;
 };
 
 /**
  * @brief Interface class for implementing subscriber notification methods.
- * Notification can be done synchronously(on_event) and asynchronously(on_event_async).
  */
 template <>
 class EventHandlerImpl<void> : public EventHandlerImplBase<void> {
@@ -57,19 +42,7 @@ public:
    * The method takes a pointer to the sender.
    * @param[in] psender Pointer to the sender.
    */
-  virtual void on_event(const void* psender) = 0;
-  /**
-   * @brief Implement this method to notify subscribers asynchronously.
-   * The method takes a pointer to the sender.
-   * It is recommended to use thread pool for asynchronous notification.
-   * @param[in] psender Pointer to the sender.
-   * @return EventHandlerAsyncResult Return std::future<bool> as execution result to wait or get operation status.
-   */
-  //virtual EventHandlerAsyncResult on_event_async(const void* psender) = 0;
-
-// protected:
-//   EventHandlerImpl() : thread_pool_(ThreadPool(2, 0)) {}
-//   ThreadPool thread_pool_;
+  virtual void OnEvent(const void* psender) = 0;
 };
 
 /**
@@ -90,26 +63,10 @@ public:
   /**
    * @brief Call handler via pointer to function.
    * The method takes a pointer to the sender and a passed argument.
-   * It is recommended to use thread pool for asynchronous notification.
-   * @param[in] psender Pointer to the sender.
-   * @param[in] arg Passed argument.
-   * @return EventHandlerAsyncResult Return std::future<bool> as execution result to wait or get operation status.
-   */
-  // virtual EventHandlerAsyncResult on_event_async(const void* psender, const T& arg) override final
-  // {
-  //   Task task;
-  //   auto result = task.assign(pFunction_, psender, arg);
-  //   this->thread_pool_.push_task(task);
-  //   return result;
-  // }
-
-  /**
-   * @brief Call handler via pointer to function.
-   * The method takes a pointer to the sender and a passed argument.
    * @param[in] psender Pointer to the sender.
    * @param[in] arg Passed argument.
    */
-  virtual void on_event(const void* psender, const T& arg) override final { pFunction_(psender, arg); }
+  virtual void OnEvent(const void* psender, const T& arg) override final { pFunction_(psender, arg); }
 
   /**
    * @brief Сhecks the current and passed event handler.
@@ -161,26 +118,10 @@ public:
   /**
    * @brief Call handler via pointer to object and pointer to class method.
    * The method takes a pointer to the sender and a passed argument.
-   * It is recommended to use thread pool for asynchronous notification.
-   * @param[in] psender Pointer to the sender.
-   * @param[in] arg Passed argument.
-   * @return EventHandlerAsyncResult Return std::future<bool> as execution result to wait or get operation status.
-   */
-  // virtual EventHandlerAsyncResult on_event_async(const void* psender, const T& arg) override final
-  // {
-  //   Task task;
-  //   auto result = task.assign(pCaller_, pMemberFunction_, psender, arg);
-  //   this->thread_pool_.push_task(task);
-  //   return result;
-  // }
-
-  /**
-   * @brief Call handler via pointer to object and pointer to class method.
-   * The method takes a pointer to the sender and a passed argument.
    * @param[in] psender Pointer to the sender.
    * @param[in] arg Passed argument.
    */
-  virtual void on_event(const void* psender, const T& arg) override final
+  virtual void OnEvent(const void* psender, const T& arg) override final
   {
     (pCaller_->*(pMemberFunction_))(psender, arg);
   }
@@ -232,24 +173,9 @@ public:
   /**
    * @brief Call handler via pointer to function.
    * The method takes a pointer to the sender.
-   * It is recommended to use thread pool for asynchronous notification.
-   * @param[in] psender Pointer to the sender.
-   * @return EventHandlerAsyncResult Return std::future<bool> as execution result to wait or get operation status.
-   */
-  // virtual EventHandlerAsyncResult on_event_async(const void* psender) override final
-  // {
-  //   Task task;
-  //   auto result = task.assign(pFunction_, psender);
-  //   thread_pool_.push_task(task);
-  //   return result;
-  // }
-
-  /**
-   * @brief Call handler via pointer to function.
-   * The method takes a pointer to the sender.
    * @param[in] psender Pointer to the sender.
    */
-  virtual void on_event(const void* psender) override final { pFunction_(psender); }
+  virtual void OnEvent(const void* psender) override final { pFunction_(psender); }
 
   /**
    * @brief Сhecks the current and passed event handler.
@@ -285,7 +211,7 @@ private:
  * @tparam U Class name.
  */
 template <typename U>
-class EventHandlerImplForMemberFunction<void, U> : public EventHandlerImpl<void> {
+class EventHandlerImplForMemberFunction<U, void> : public EventHandlerImpl<void> {
 public:
   /**
    * @brief Construct a new EventHandlerImplForMemberFunction object.
@@ -300,24 +226,9 @@ public:
   /**
    * @brief Call handler via pointer to object and pointer to class method.
    * The method takes a pointer to the sender.
-   * It is recommended to use thread pool for asynchronous notification.
-   * @param[in] psender Pointer to the sender.
-   * @return EventHandlerAsyncResult Return std::future<bool> as execution result to wait or get operation status.
-   */
-  // virtual EventHandlerAsyncResult on_event_async(const void* psender) override final
-  // {
-  //   Task task;
-  //   auto result = task.assign(pCaller_, pMemberFunction_, psender);
-  //   thread_pool_.push_task(task);
-  //   return result;
-  // }
-
-  /**
-   * @brief Call handler via pointer to object and pointer to class method.
-   * The method takes a pointer to the sender.
    * @param[in] psender Pointer to the sender.
    */
-  virtual void on_event(const void* psender) override final { (pCaller_->*(pMemberFunction_))(psender); }
+  virtual void OnEvent(const void* psender) override final { (pCaller_->*(pMemberFunction_))(psender); }
 
   /**
    * @brief Сhecks the current and passed event handler.
@@ -333,7 +244,7 @@ public:
       return false;
     }
 
-    const auto pHandlerCasted = dynamic_cast<const EventHandlerImplForMemberFunction<void, U>*>(pHandler2);
+    const auto pHandlerCasted = dynamic_cast<const EventHandlerImplForMemberFunction<U, void>*>(pHandler2);
     if (!pHandlerCasted) {
       return false;
     }
