@@ -1,9 +1,10 @@
 #pragma once
 
-#include "ThreadPoolExecutable.hpp"
 #include "EventBase.hpp"
 
 namespace core {
+
+using EventHandlerAsyncResult = std::future<bool>;
 
 /**
  * @brief This class implement event object. It provides
@@ -12,9 +13,10 @@ namespace core {
  * @tparam T Template parameter contains argument for observers/sunscribers.
  */
 template <typename T>
-class Event : public EventBase<T>, public ThreadPoolExecutable {
+class Event : public EventBase<T> {
   using EventBase<T>::mutex_;
   using EventBase<T>::handlers_;
+  using EventBase<T>::thread_pool_;
 
 public:
   /**
@@ -41,17 +43,20 @@ public:
    */
   std::vector<EventHandlerAsyncResult> notify_async(const void* psender, const T& arg)
   {
-  //   Task task;
-  //   auto result = task.assign(pCaller_, pMemberFunction_, psender, arg);
-  //   this->thread_pool_.push_task(task);
-  //   return result;
+    if(!thread_pool_) {
+      throw std::domain_error("Thread pool was not setted for async notification!");
+    }
 
     std::vector<EventHandlerAsyncResult> results;
     results.reserve(handlers_.size());
     std::shared_lock lock(mutex_);
     for (const auto& pHandler : handlers_) {
-      if (pHandler)
-        results.emplace_back(pHandler->on_event_async(psender, arg));
+      if (pHandler) {
+            Task task;
+            auto result = task.assign(pHandler.get(), &EventHandlerImpl<T>::on_event, psender, arg);
+            thread_pool_->push_task(task);
+            results.push_back(std::move(result));
+      }
     }
     return results;
   }
@@ -63,10 +68,7 @@ public:
  * Notification may be occured in sync and async modes.
  */
 template <>
-class Event<void> : public EventBase<void>, public ThreadPoolExecutable {
-  using EventBase<void>::mutex_;
-  using EventBase<void>::handlers_;
-
+class Event<void> : public EventBase<void> {
 public:
   /**
    * @brief This function provides sync notification. Notification
@@ -90,12 +92,20 @@ public:
    */
   std::vector<EventHandlerAsyncResult> notify_async(const void* psender)
   {
+    if(!thread_pool_) {
+      throw std::domain_error("Thread pool was not setted for async notification!");
+    }
+
     std::vector<EventHandlerAsyncResult> results;
     results.reserve(handlers_.size());
     std::shared_lock lock(mutex_);
     for (const auto& pHandler : handlers_) {
-      if (pHandler)
-        results.emplace_back(pHandler->on_event_async(psender));
+      if (pHandler) {
+        Task task;
+        auto result = task.assign(pHandler.get(), &EventHandlerImpl<void>::on_event, psender);
+        thread_pool_->push_task(task);
+        results.emplace_back(std::move(result));
+      }
     }
     return results;
   }

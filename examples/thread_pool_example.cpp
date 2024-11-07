@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <chrono>
+#include <algorithm>
 
 using namespace std::chrono_literals;
 

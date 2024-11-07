@@ -30,8 +30,27 @@ private:
   core::Event<std::string> message_event;
 };
 
+class Base {
+  public:
+  virtual void f(const void* psender, int i) = 0;
+};
+
+class Derived : public Base {
+  public:
+  virtual void f(const void* psender, int i) override {
+    std::cout << i << std::endl;
+  }
+};
+
 int main(int argc, char** argv)
 {
+  {
+    std::shared_ptr<Base> der_obj(new Derived);
+    core::Event<int> ev;
+    ev += core::EventHandler::bind(der_obj.get(), &Base::f);
+    ev.notify(nullptr, 5);
+  }
+
   {
     // Function event handler
     core::Event<double> ev;

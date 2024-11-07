@@ -5,6 +5,7 @@
 #include <utility>
 #include <queue>
 #include <iostream>
+#include <memory>
 
 namespace core {
 
@@ -13,8 +14,6 @@ class EventHandlerImpl;
 
 template <typename T>
 using EventHandlerImplPtr = std::unique_ptr<EventHandlerImpl<T>>;
-
-using EventHandlerAsyncResult = std::future<bool>;
 
 /**
  * @brief Interface class for implementing subscriber notification methods.
@@ -39,7 +38,7 @@ public:
    * @param[in] arg Passed argument.
    * @return AsyncResult Return std::future<bool> as execution result to wait or get operation status.
    */
-  virtual EventHandlerAsyncResult on_event_async(const void* psender, const T& arg) = 0;
+  //virtual EventHandlerAsyncResult on_event_async(const void* psender, const T& arg) = 0;
 
 // protected:
 //   EventHandlerImpl() : thread_pool_(ThreadPool(2, 0)) {}

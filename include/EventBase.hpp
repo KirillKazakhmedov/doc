@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EventHandlerImpl.hpp"
+#include "ThreadPoolExecutable.hpp"
 
 #include <vector>
 #include <shared_mutex>
@@ -15,7 +16,7 @@ namespace core {
  * @tparam T
  */
 template <typename T>
-class EventBase {
+class EventBase : public ThreadPoolExecutable {
 public:
   /**
    * @brief Copy ctor.

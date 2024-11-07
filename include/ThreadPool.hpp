@@ -19,12 +19,16 @@ namespace core {
 
 class ThreadPool {
 public:
+  using SharedPtr = std::shared_ptr<ThreadPool>;
+  using UniquePtr = std::unique_ptr<ThreadPool>;
   /**
    * @brief Construct a new thread pool.
    *
-   * @param _thread_count The number of threads to use. The default value is the total number of hardware threads
+   * @param thread_count The number of threads to use. The default value is the total number of hardware threads
    * available, as reported by the implementation. With a hyperthreaded CPU, this will be twice the number of CPU cores.
    * If the argument is zero, the default value will be used instead.
+   * @param max_task_queue_size The maximum number of tasks in the queue.
+   *  The task is added if the queue is not full otherwise false is returned
    */
   ThreadPool(std::uint32_t thread_count, std::uint32_t max_task_queue_size);
 
