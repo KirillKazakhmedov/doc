@@ -45,6 +45,9 @@ TEST(EvenHandlerImplFunctionTest, test_on_same_type_non_member_function)
 
     EXPECT_TRUE(custom_handler.IsSametype(&another_custom_handler));
     EXPECT_FALSE(custom_handler.IsBindedToSameFunctionAs(&another_custom_handler));
+
+    EXPECT_FALSE(custom_handler.IsSametype(nullptr));
+    EXPECT_FALSE(custom_handler.IsBindedToSameFunctionAs(nullptr));
 }
 
 TEST(EvenHandlerImplFunctionTest, test_on_same_type_member_function)
@@ -66,4 +69,7 @@ TEST(EvenHandlerImplFunctionTest, test_on_same_type_member_function)
 
     EXPECT_TRUE(custom_handler.IsSametype(&another_custom_handler));
     EXPECT_FALSE(custom_handler.IsBindedToSameFunctionAs(&another_custom_handler));
+
+    EXPECT_FALSE(custom_handler.IsSametype(nullptr));
+    EXPECT_FALSE(custom_handler.IsBindedToSameFunctionAs(nullptr));
 }
