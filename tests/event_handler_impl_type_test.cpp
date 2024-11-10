@@ -1,4 +1,5 @@
 #include "EventHandlerImpl.hpp"
+#include "EventHandler.hpp"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -72,4 +73,26 @@ TEST(EvenHandlerImplFunctionTest, test_on_same_type_member_function)
 
     EXPECT_FALSE(custom_handler.IsSametype(nullptr));
     EXPECT_FALSE(custom_handler.IsBindedToSameFunctionAs(nullptr));
+}
+
+TEST(EvenHandlerImplFunctionTest, test_on_event_handler_result)
+{
+    ExecutableEntity<CustomArgumentStruct> entity_obj;
+    const auto void_function_handler = core::EventHandler::bind(&void_callback);
+    const auto custom_function_handler = core::EventHandler::bind(&another_callback);
+    const auto void_member_fnuction_handler = core::EventHandler::bind(&entity_obj, &ExecutableEntity<CustomArgumentStruct>::void_execute);
+    const auto custom_member_fnuction_handler = core::EventHandler::bind(&entity_obj, &ExecutableEntity<CustomArgumentStruct>::primary_execute);
+
+    const auto pvoid_function_handler = 
+            dynamic_cast<const core::EventHandlerImplForNonMemberFunction<void>*>(void_function_handler.get());
+    EXPECT_TRUE(pvoid_function_handler != nullptr);
+    const auto pcustom_function_handler = 
+            dynamic_cast<const core::EventHandlerImplForNonMemberFunction<CustomArgumentStruct>*>(custom_function_handler.get());
+    EXPECT_TRUE(pcustom_function_handler != nullptr);
+    const auto pvoid_member_fnuction_handler = 
+            dynamic_cast<const core::EventHandlerImplForMemberFunction<decltype(entity_obj), void>*>(void_member_fnuction_handler.get());
+    EXPECT_TRUE(pvoid_member_fnuction_handler != nullptr);
+    const auto pcustom_member_fnuction_handler = 
+            dynamic_cast<const core::EventHandlerImplForMemberFunction<decltype(entity_obj), CustomArgumentStruct>*>(custom_member_fnuction_handler.get());
+    EXPECT_TRUE(pcustom_member_fnuction_handler != nullptr);
 }
