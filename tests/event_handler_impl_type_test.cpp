@@ -1,30 +1,11 @@
-#include "EventHandlerImpl.hpp"
+#include "common.hpp"
 #include "EventHandler.hpp"
 
 #include <gtest/gtest.h>
 
-namespace {
-    struct CustomArgumentStruct {
-        int a;
-        double b;
-        std::string str;
-    };
+using testing::_;
 
-    template<typename T>
-    void callback(const void* psender, T arg) {}
-    void another_callback(const void* psender, CustomArgumentStruct arg) {}
-    void void_callback(const void* psender) {}
-
-    template<typename T>
-    class ExecutableEntity {
-        public:
-        void primary_execute(const void* psender, T arg) {}
-        void secondary_execute(const void* psender, T arg) {}
-        void void_execute(const void* psender) {}
-    };
-}
-
-TEST(EvenHandlerImplFunctionTest, test_on_same_type_non_member_function)
+TEST(EvenHandlerImplTypeTest, test_on_same_type_non_member_function)
 {
     core::EventHandlerImplForNonMemberFunction<void> void_handler(&void_callback);
     core::EventHandlerImplForNonMemberFunction<int> int_handler(&callback<int>);
@@ -32,7 +13,7 @@ TEST(EvenHandlerImplFunctionTest, test_on_same_type_non_member_function)
     core::EventHandlerImplForNonMemberFunction<CustomArgumentStruct> 
             custom_handler(&callback<CustomArgumentStruct>);
     core::EventHandlerImplForNonMemberFunction<CustomArgumentStruct> 
-            another_custom_handler(&another_callback);
+            another_custom_handler(&custom_callback);
 
     EXPECT_TRUE(void_handler.IsSametype(&void_handler));
     EXPECT_TRUE(void_handler.IsBindedToSameFunctionAs(&void_handler));
@@ -50,7 +31,7 @@ TEST(EvenHandlerImplFunctionTest, test_on_same_type_non_member_function)
     EXPECT_FALSE(custom_handler.IsBindedToSameFunctionAs(nullptr));
 }
 
-TEST(EvenHandlerImplFunctionTest, test_on_same_type_member_function)
+TEST(EvenHandlerImplTypeTest, test_on_same_type_member_function)
 {
     ExecutableEntity<CustomArgumentStruct> entity_obj;
     core::EventHandlerImplForMemberFunction<decltype(entity_obj), CustomArgumentStruct> 
@@ -74,11 +55,11 @@ TEST(EvenHandlerImplFunctionTest, test_on_same_type_member_function)
     EXPECT_FALSE(custom_handler.IsBindedToSameFunctionAs(nullptr));
 }
 
-TEST(EvenHandlerImplFunctionTest, test_on_event_handler_result)
+TEST(EvenHandlerImplTypeTest, test_on_event_handler_result)
 {
     ExecutableEntity<CustomArgumentStruct> entity_obj;
     const auto void_function_handler = core::EventHandler::bind(&void_callback);
-    const auto custom_function_handler = core::EventHandler::bind(&another_callback);
+    const auto custom_function_handler = core::EventHandler::bind(&custom_callback);
     const auto void_member_fnuction_handler = core::EventHandler::bind(&entity_obj, &ExecutableEntity<CustomArgumentStruct>::void_execute);
     const auto custom_member_fnuction_handler = core::EventHandler::bind(&entity_obj, &ExecutableEntity<CustomArgumentStruct>::primary_execute);
 

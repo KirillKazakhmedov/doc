@@ -15,9 +15,6 @@ class EventHandlerImpl;
 template <typename T>
 using EventHandlerImplPtr = std::unique_ptr<EventHandlerImpl<T>>;
 
-template <typename T>
-using EventHandlerImplSPtr = std::shared_ptr<EventHandlerImpl<T>>;
-
 /**
  * @brief Interface class for implementing subscriber notification methods.
  * @tparam T Passed argument type.
@@ -69,7 +66,12 @@ public:
    * @param[in] psender Pointer to the sender.
    * @param[in] arg Passed argument.
    */
-  virtual void OnEvent(const void* psender, const T& arg) override final { pFunction_(psender, arg); }
+  virtual void OnEvent(const void* psender, const T& arg) override final 
+  {
+    if(pFunction_) {
+      pFunction_(psender, arg);
+    }
+  }
 
   /**
    * @brief Сhecks the current and passed event handler.
@@ -126,7 +128,9 @@ public:
    */
   virtual void OnEvent(const void* psender, const T& arg) override final
   {
-    (pCaller_->*(pMemberFunction_))(psender, arg);
+    if(pCaller_ && pMemberFunction_) {
+      (pCaller_->*(pMemberFunction_))(psender, arg);
+    }
   }
 
   /**
@@ -178,7 +182,12 @@ public:
    * The method takes a pointer to the sender.
    * @param[in] psender Pointer to the sender.
    */
-  virtual void OnEvent(const void* psender) override final { pFunction_(psender); }
+  virtual void OnEvent(const void* psender) override final 
+  {
+    if(pFunction_) {
+      pFunction_(psender); 
+    }
+  }
 
   /**
    * @brief Сhecks the current and passed event handler.
@@ -231,7 +240,12 @@ public:
    * The method takes a pointer to the sender.
    * @param[in] psender Pointer to the sender.
    */
-  virtual void OnEvent(const void* psender) override final { (pCaller_->*(pMemberFunction_))(psender); }
+  virtual void OnEvent(const void* psender) override final 
+  { 
+    if(pCaller_ && pMemberFunction_) {
+      (pCaller_->*(pMemberFunction_))(psender); 
+    }
+  }
 
   /**
    * @brief Сhecks the current and passed event handler.
