@@ -15,6 +15,9 @@ class EventHandlerImpl;
 template <typename T>
 using EventHandlerImplPtr = std::unique_ptr<EventHandlerImpl<T>>;
 
+template <typename T>
+using EventHandlerImplSPtr = std::shared_ptr<EventHandlerImpl<T>>;
+
 /**
  * @brief Interface class for implementing subscriber notification methods.
  * @tparam T Passed argument type.
@@ -76,12 +79,12 @@ public:
    * @return true If handlers are same type and have same function pointer.
    * @return false Otherwise
    */
-  virtual bool IsBindedToSameFunctionAs(const EventHandlerImplBase<T>* pHandler2) const override final
+  virtual bool IsBindedToSameFunctionAs(const EventHandlerImplBase<T>* pHandler) const override final
   {
-    if (!EventHandlerImplBase<T>::IsSametype(pHandler2)) {
+    if (!EventHandlerImplBase<T>::IsSametype(pHandler)) {
       return false;
     }
-    const auto pHandlerCasted = dynamic_cast<const EventHandlerImplForNonMemberFunction<T>*>(pHandler2);
+    const auto pHandlerCasted = dynamic_cast<const EventHandlerImplForNonMemberFunction<T>*>(pHandler);
     if (!pHandlerCasted) {
       return false;
     }
@@ -134,12 +137,12 @@ public:
    * @return true If handlers are same type and have same object and method pointers.
    * @return false Otherwise
    */
-  virtual bool IsBindedToSameFunctionAs(const EventHandlerImplBase<T>* pHandler2) const override final
+  virtual bool IsBindedToSameFunctionAs(const EventHandlerImplBase<T>* pHandler) const override final
   {
-    if (!EventHandlerImplBase<T>::IsSametype(pHandler2)) {
+    if (!EventHandlerImplBase<T>::IsSametype(pHandler)) {
       return false;
     }
-    const auto pHandlerCasted = dynamic_cast<const EventHandlerImplForMemberFunction<U, T>*>(pHandler2);
+    const auto pHandlerCasted = dynamic_cast<const EventHandlerImplForMemberFunction<U, T>*>(pHandler);
     if (!pHandlerCasted) {
       return false;
     }
@@ -185,12 +188,12 @@ public:
    * @return true If handlers are same type and have same function pointer.
    * @return false Otherwise.
    */
-  virtual bool IsBindedToSameFunctionAs(const EventHandlerImplBase<void>* pHandler2) const override final
+  virtual bool IsBindedToSameFunctionAs(const EventHandlerImplBase<void>* pHandler) const override final
   {
-    if (!IsSametype(pHandler2)) {
+    if (!IsSametype(pHandler)) {
       return false;
     }
-    const auto pHandlerCasted = dynamic_cast<const EventHandlerImplForNonMemberFunction<void>*>(pHandler2);
+    const auto pHandlerCasted = dynamic_cast<const EventHandlerImplForNonMemberFunction<void>*>(pHandler);
     if (!pHandlerCasted) {
       return false;
     }
@@ -238,13 +241,13 @@ public:
    * @return true If handlers are same type and have same object and method pointers.
    * @return false Otherwise
    */
-  virtual bool IsBindedToSameFunctionAs(const EventHandlerImplBase<void>* pHandler2) const override final
+  virtual bool IsBindedToSameFunctionAs(const EventHandlerImplBase<void>* pHandler) const override final
   {
-    if (!IsSametype(pHandler2)) {
+    if (!IsSametype(pHandler)) {
       return false;
     }
 
-    const auto pHandlerCasted = dynamic_cast<const EventHandlerImplForMemberFunction<U, void>*>(pHandler2);
+    const auto pHandlerCasted = dynamic_cast<const EventHandlerImplForMemberFunction<U, void>*>(pHandler);
     if (!pHandlerCasted) {
       return false;
     }

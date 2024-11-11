@@ -23,7 +23,7 @@ public:
    * @return true If both handlers are of the same type and point to the same function/method.
    * @return false Otherwise
    */
-  virtual bool IsBindedToSameFunctionAs(const EventHandlerImplBase<T>*) const = 0;
+  virtual bool IsBindedToSameFunctionAs(const EventHandlerImplBase<T>* pHandler) const = 0;
 
   /**
    * @brief Checks the type of the current handler with the one passed.
@@ -32,9 +32,9 @@ public:
    * @return true If types are matched
    * @return false Otherwise
    */
-  bool IsSametype(const EventHandlerImplBase<T>* pHandler2) const
+  bool IsSametype(const EventHandlerImplBase<T>* pHandler) const
   {
-    if (!pHandler2 || typeid(*this) != typeid(*pHandler2)) {
+    if (!pHandler || typeid(*this) != typeid(*pHandler)) {
       return false;
     }
     return true;
