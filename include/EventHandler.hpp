@@ -4,7 +4,6 @@
 #include <memory>
 
 namespace core {
-
 /**
  * @brief This class contains static methods for creating EventHandlerImpl pointer
  * associated with corresponding event handler. Event handler may be presented as function

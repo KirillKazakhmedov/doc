@@ -115,7 +115,7 @@ public:
    * @brief Wraps a member function with a variable number of arguments in std::function<void> object.
    * Return std::future<bool> if returning type has void. If member function execution was failed result are
    * setted as std::current_exception().
-   * @tparam T Class contains mamber function type as FuncT.
+   * @tparam T Class contains member function type as FuncT.
    * @tparam FuncT Member function type.
    * @tparam Args Passed arguments.
    * @return std::future<bool> Will return via future.get() true, if execution was finished successful,
@@ -146,7 +146,7 @@ public:
    * @brief Wraps a member function with a variable number of arguments in std::function<void> object.
    * Return std::future<R> if returning type has void. If member function execution was failed result are
    * setted as std::current_exception().
-   * @tparam T Class contains mamber function type as FuncT.
+   * @tparam T Class contains member function type as FuncT.
    * @tparam FuncT Member function type.
    * @tparam Args Passed arguments.
    * @tparam R Returning type.
