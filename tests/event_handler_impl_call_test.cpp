@@ -12,9 +12,6 @@ class MockExecutableEntity : public ExecutableEntity<T> {
     public:
     MOCK_METHOD(void, primary_execute, (const void* psender, T arg), ());
     MOCK_METHOD(void, void_execute, (const void* psender), ());
-    // void primary_execute(const void* psender, T arg) {}
-    // void secondary_execute(const void* psender, T arg) {}
-    // void void_execute(const void* psender) {}
 };
 }
 
