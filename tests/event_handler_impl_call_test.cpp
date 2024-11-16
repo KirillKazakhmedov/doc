@@ -17,7 +17,7 @@ class MockExecutableEntity : public ExecutableEntity<T> {
 
 TEST(EvenHandlerImplCallTest, test_on_call_fake_function)
 {
-    core::EventHandlerImplPtr<CustomArgumentStruct> 
+    core::EventHandlerImplPtr<CustomArgumentStruct>
         fake_event_handler(new FakeEventHandlerImpl<CustomArgumentStruct>());
     MockEventHandlerImpl<CustomArgumentStruct> mock_event_handler(fake_event_handler.get());
     mock_event_handler.DelegateToFake();
@@ -73,8 +73,8 @@ TEST(EvenHandlerImplCallTest, test_on_call_parameter_non_member_nullptr)
 TEST(EvenHandlerImplCallTest, test_on_call_parameter_member_function)
 {
     MockExecutableEntity<CustomArgumentStruct> mock_exec_entity;
-    const auto function_event_handler = 
-        core::EventHandler::bind<decltype(mock_exec_entity), CustomArgumentStruct>(&mock_exec_entity, 
+    const auto function_event_handler =
+        core::EventHandler::bind<decltype(mock_exec_entity), CustomArgumentStruct>(&mock_exec_entity,
                                                                                    &decltype(mock_exec_entity)::primary_execute);
     MockEventHandlerImpl<CustomArgumentStruct> mock_event_handler(function_event_handler.get());
     mock_event_handler.DelegateToFake();
@@ -87,7 +87,7 @@ TEST(EvenHandlerImplCallTest, test_on_call_parameter_member_function)
 TEST(EvenHandlerImplCallTest, test_on_call_parameter_member_nullptr)
 {
     MockExecutableEntity<CustomArgumentStruct> mock_exec_entity;
-    const auto function_event_handler = 
+    const auto function_event_handler =
         core::EventHandler::bind<decltype(mock_exec_entity), CustomArgumentStruct>(nullptr, nullptr);
     MockEventHandlerImpl<CustomArgumentStruct> mock_event_handler(function_event_handler.get());
     mock_event_handler.DelegateToFake();
@@ -102,8 +102,8 @@ TEST(EvenHandlerImplCallTest, test_on_call_parameter_member_nullptr)
 TEST(EvenHandlerImplCallTest, test_on_call_void_member_function)
 {
     MockExecutableEntity<CustomArgumentStruct> mock_exec_entity;
-    const auto function_event_handler = 
-        core::EventHandler::bind<decltype(mock_exec_entity)>(&mock_exec_entity, 
+    const auto function_event_handler =
+        core::EventHandler::bind<decltype(mock_exec_entity)>(&mock_exec_entity,
                                                              &decltype(mock_exec_entity)::void_execute);
     MockEventHandlerImpl<void> mock_event_handler(function_event_handler.get());
     mock_event_handler.DelegateToFake();

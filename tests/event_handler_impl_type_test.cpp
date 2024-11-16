@@ -10,9 +10,9 @@ TEST(EvenHandlerImplTypeTest, test_on_same_type_non_member_function)
     core::EventHandlerImplForNonMemberFunction<void> void_handler(&void_callback);
     core::EventHandlerImplForNonMemberFunction<int> int_handler(&callback<int>);
     core::EventHandlerImplForNonMemberFunction<std::string> string_handler(&callback<std::string>);
-    core::EventHandlerImplForNonMemberFunction<CustomArgumentStruct> 
+    core::EventHandlerImplForNonMemberFunction<CustomArgumentStruct>
             custom_handler(&callback<CustomArgumentStruct>);
-    core::EventHandlerImplForNonMemberFunction<CustomArgumentStruct> 
+    core::EventHandlerImplForNonMemberFunction<CustomArgumentStruct>
             another_custom_handler(&custom_callback);
 
     EXPECT_TRUE(void_handler.IsSametype(&void_handler));
@@ -34,7 +34,7 @@ TEST(EvenHandlerImplTypeTest, test_on_same_type_non_member_function)
 TEST(EvenHandlerImplTypeTest, test_on_same_type_member_function)
 {
     ExecutableEntity<CustomArgumentStruct> entity_obj;
-    core::EventHandlerImplForMemberFunction<decltype(entity_obj), CustomArgumentStruct> 
+    core::EventHandlerImplForMemberFunction<decltype(entity_obj), CustomArgumentStruct>
             custom_handler(&entity_obj, &decltype(entity_obj)::primary_execute);
     core::EventHandlerImplForMemberFunction<decltype(entity_obj), CustomArgumentStruct>
             another_custom_handler(&entity_obj, &decltype(entity_obj)::secondary_execute);
@@ -63,16 +63,16 @@ TEST(EvenHandlerImplTypeTest, test_on_event_handler_result)
     const auto void_member_fnuction_handler = core::EventHandler::bind(&entity_obj, &ExecutableEntity<CustomArgumentStruct>::void_execute);
     const auto custom_member_fnuction_handler = core::EventHandler::bind(&entity_obj, &ExecutableEntity<CustomArgumentStruct>::primary_execute);
 
-    const auto pvoid_function_handler = 
+    const auto pvoid_function_handler =
             dynamic_cast<const core::EventHandlerImplForNonMemberFunction<void>*>(void_function_handler.get());
     EXPECT_TRUE(pvoid_function_handler != nullptr);
-    const auto pcustom_function_handler = 
+    const auto pcustom_function_handler =
             dynamic_cast<const core::EventHandlerImplForNonMemberFunction<CustomArgumentStruct>*>(custom_function_handler.get());
     EXPECT_TRUE(pcustom_function_handler != nullptr);
-    const auto pvoid_member_fnuction_handler = 
+    const auto pvoid_member_fnuction_handler =
             dynamic_cast<const core::EventHandlerImplForMemberFunction<decltype(entity_obj), void>*>(void_member_fnuction_handler.get());
     EXPECT_TRUE(pvoid_member_fnuction_handler != nullptr);
-    const auto pcustom_member_fnuction_handler = 
+    const auto pcustom_member_fnuction_handler =
             dynamic_cast<const core::EventHandlerImplForMemberFunction<decltype(entity_obj), CustomArgumentStruct>*>(custom_member_fnuction_handler.get());
     EXPECT_TRUE(pcustom_member_fnuction_handler != nullptr);
 }

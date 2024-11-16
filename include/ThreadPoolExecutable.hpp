@@ -11,7 +11,7 @@ class ThreadPoolExecutable {
 public:
   /**
    * @brief Set the thread count for execution via thread pool
-   * @param thread_count 
+   * @param thread_count
    * @param max_task_queue_size
    */
   void init_thread_pool(std::uint32_t thread_count, std::uint32_t max_task_queue_size)

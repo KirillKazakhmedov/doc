@@ -66,7 +66,7 @@ public:
    * @param[in] psender Pointer to the sender.
    * @param[in] arg Passed argument.
    */
-  virtual void OnEvent(const void* psender, const T& arg) override final 
+  virtual void OnEvent(const void* psender, const T& arg) override final
   {
     if(pFunction_) {
       pFunction_(psender, arg);
@@ -182,10 +182,10 @@ public:
    * The method takes a pointer to the sender.
    * @param[in] psender Pointer to the sender.
    */
-  virtual void OnEvent(const void* psender) override final 
+  virtual void OnEvent(const void* psender) override final
   {
     if(pFunction_) {
-      pFunction_(psender); 
+      pFunction_(psender);
     }
   }
 
@@ -240,10 +240,10 @@ public:
    * The method takes a pointer to the sender.
    * @param[in] psender Pointer to the sender.
    */
-  virtual void OnEvent(const void* psender) override final 
-  { 
+  virtual void OnEvent(const void* psender) override final
+  {
     if(pCaller_ && pMemberFunction_) {
-      (pCaller_->*(pMemberFunction_))(psender); 
+      (pCaller_->*(pMemberFunction_))(psender);
     }
   }
 

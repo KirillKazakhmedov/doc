@@ -10,11 +10,11 @@ add_executable(
   ${SOURCES_CPP_TEST}
 )
 
-target_include_directories(${TEST_PROJECT} PRIVATE 
+target_include_directories(${TEST_PROJECT} PRIVATE
 ${INC_DIR}
 )
 
-target_link_libraries(${TEST_PROJECT} PRIVATE 
+target_link_libraries(${TEST_PROJECT} PRIVATE
     GTest::gtest
     GTest::gmock)
 

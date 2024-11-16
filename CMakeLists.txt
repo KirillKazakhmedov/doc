@@ -25,7 +25,7 @@ set(core ${PROJECT_NAME})
 add_library(core SHARED
 ${SOURCES}
 )
-target_include_directories(core PRIVATE 
+target_include_directories(core PRIVATE
 ${INC_DIR}
 )
 target_link_libraries(core
