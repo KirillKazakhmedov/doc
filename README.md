@@ -4,9 +4,46 @@ This repository include the most common approaches to simplify the development o
 Among the implemented approaches, a pool of threads and an event model communication was implemented.
 This library uses only components of the C++ Standard Library.
 
-## Build
+## Preparing
 
-cmake -Bbuild -H.  -DBUILD_TYPE=Release -DENABLE_EXAMPLES=OFF -DENABLE_TESTS=OFF && cmake --build build -- -j4
+Specify the folder containing your workspace with the command:
+```export HOST_WORKSPACE=<your path>```
+
+In the $HOST_WORKSPACE folder, copy this repository using
+```git clone command line https://github.com/KirillKazakhmedov/event-model.git```
+
+
+## Docker
+
+The repository uses a multi-stage build using docker compose.
+
+Build a basic image containing the necessary dependencies:
+```docker compose -f docker/docker-compose.yaml build event-model-base```
+
+Build a docker image to launch a develop container:
+```docker compose -f docker/docker-compose.yaml build event-model-develop```
+
+Launch a develop container:
+```docker compose -f docker/docker-compose.yaml up event-model-develop --detach```
+
+Enter the container with the command:
+```docker exec -it event_model_develop bash```
+
+To stop the container, enter the command:
+```docker compose -f docker/docker-compose.yaml down event-model-develop```
+
+## Build and run tests in the container
+
+Build:
+```cd event-model && cmake -Bbuild -H.  -DBUILD_TYPE=Release -DENABLE_EXAMPLES=OFF -DENABLE_TESTS=ON && cmake --build build --```
+
+Run tests:
+```cd build && ctest --output-on-failure```
+
+## Formatting
+
+To provide correct code formatting use pre-commit tool:
+```cd event-model && pre-commit install && pre-commit run --all-files```
 
 ## License
 

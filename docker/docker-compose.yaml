@@ -1,0 +1,31 @@
+version: "3"
+services:
+# Base service. You don't need to start container from here
+  event-model-base:
+    image: event-model/base:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: base
+      args:
+        IMAGE_BASE: "ubuntu:22.04"
+
+# Develop service. This container launch to provide developing and debugging
+  event-model-develop:
+    extends: event-model-base
+    container_name: event_model_develop
+    image: event-model/develop:latest
+    command: /bin/bash
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: develop
+    volumes:
+      - $HOST_WORKSPACE:/root/workspace
+      - $HOME/.ssh:/root/.ssh:ro
+    restart: always
+    tty: true
+    stdin_open: true
+    userns_mode: host
+    network_mode: host
+    privileged: true
