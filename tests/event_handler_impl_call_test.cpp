@@ -17,15 +17,16 @@ class MockExecutableEntity : public ExecutableEntity<T> {
 
 TEST(EvenHandlerImplCallTest, test_on_call_fake_function)
 {
-    core::EventHandlerImplPtr<CustomArgumentStruct>
-        fake_event_handler(new FakeEventHandlerImpl<CustomArgumentStruct>());
-    MockEventHandlerImpl<CustomArgumentStruct> mock_event_handler(fake_event_handler.get());
+    using ArgT = CustomArgumentStruct;
+    core::EventHandlerImplPtr<ArgT>
+        fake_event_handler(new FakeEventHandlerImpl<ArgT>());
+    MockEventHandlerImpl<ArgT> mock_event_handler(fake_event_handler.get());
     mock_event_handler.DelegateToFake();
 
     EXPECT_CALL(mock_event_handler, OnEvent(_, _));
     EXPECT_CALL(mock_event_handler, IsBindedToSameFunctionAs(_));
 
-    mock_event_handler.OnEvent(nullptr, CustomArgumentStruct());
+    mock_event_handler.OnEvent(nullptr, ArgT());
     mock_event_handler.IsBindedToSameFunctionAs(nullptr);
 }
 
@@ -45,63 +46,68 @@ TEST(EvenHandlerImplCallTest, test_on_call_void_non_member_function)
 
 TEST(EvenHandlerImplCallTest, test_on_call_parameter_non_member_function)
 {
-    const auto function_event_handler = core::EventHandler::bind<CustomArgumentStruct>(&callback);
-    MockEventHandlerImpl<CustomArgumentStruct> mock_event_handler(function_event_handler.get());
+    using ArgT = CustomArgumentStruct;
+    const auto function_event_handler = core::EventHandler::bind<ArgT>(&callback);
+    MockEventHandlerImpl<ArgT> mock_event_handler(function_event_handler.get());
     mock_event_handler.DelegateToFake();
 
     EXPECT_CALL(mock_event_handler, OnEvent(_, _)).Times(1);
     EXPECT_CALL(mock_event_handler, IsBindedToSameFunctionAs(_)).Times(1);
 
-    mock_event_handler.OnEvent(nullptr, CustomArgumentStruct());
+    mock_event_handler.OnEvent(nullptr, ArgT());
     mock_event_handler.IsBindedToSameFunctionAs(nullptr);
     EXPECT_TRUE(parameter_counter == 1);
 }
 
 TEST(EvenHandlerImplCallTest, test_on_call_parameter_non_member_nullptr)
 {
-    const auto function_event_handler = core::EventHandler::bind<CustomArgumentStruct>(nullptr);
-    MockEventHandlerImpl<CustomArgumentStruct> mock_event_handler(function_event_handler.get());
+    using ArgT = CustomArgumentStruct;
+    const auto function_event_handler = core::EventHandler::bind<ArgT>(nullptr);
+    MockEventHandlerImpl<ArgT> mock_event_handler(function_event_handler.get());
     mock_event_handler.DelegateToFake();
 
     EXPECT_CALL(mock_event_handler, OnEvent(_, _)).Times(1);
     EXPECT_CALL(mock_event_handler, IsBindedToSameFunctionAs(_)).Times(1);
 
-    mock_event_handler.OnEvent(nullptr, CustomArgumentStruct());
+    mock_event_handler.OnEvent(nullptr, ArgT());
     mock_event_handler.IsBindedToSameFunctionAs(nullptr);
 }
 
 TEST(EvenHandlerImplCallTest, test_on_call_parameter_member_function)
 {
-    MockExecutableEntity<CustomArgumentStruct> mock_exec_entity;
+    using ArgT = CustomArgumentStruct;
+    MockExecutableEntity<ArgT> mock_exec_entity;
     const auto function_event_handler =
-        core::EventHandler::bind<decltype(mock_exec_entity), CustomArgumentStruct>(&mock_exec_entity,
-                                                                                   &decltype(mock_exec_entity)::primary_execute);
-    MockEventHandlerImpl<CustomArgumentStruct> mock_event_handler(function_event_handler.get());
+        core::EventHandler::bind<decltype(mock_exec_entity), ArgT>(&mock_exec_entity,
+                                                                   &decltype(mock_exec_entity)::primary_execute);
+    MockEventHandlerImpl<ArgT> mock_event_handler(function_event_handler.get());
     mock_event_handler.DelegateToFake();
 
     EXPECT_CALL(mock_exec_entity, primary_execute(_, _)).Times(1);
 
-    mock_event_handler.OnEvent(nullptr, CustomArgumentStruct());
+    mock_event_handler.OnEvent(nullptr, ArgT());
 }
 
 TEST(EvenHandlerImplCallTest, test_on_call_parameter_member_nullptr)
 {
-    MockExecutableEntity<CustomArgumentStruct> mock_exec_entity;
+    using ArgT = CustomArgumentStruct;
+    MockExecutableEntity<ArgT> mock_exec_entity;
     const auto function_event_handler =
-        core::EventHandler::bind<decltype(mock_exec_entity), CustomArgumentStruct>(nullptr, nullptr);
-    MockEventHandlerImpl<CustomArgumentStruct> mock_event_handler(function_event_handler.get());
+        core::EventHandler::bind<decltype(mock_exec_entity), ArgT>(nullptr, nullptr);
+    MockEventHandlerImpl<ArgT> mock_event_handler(function_event_handler.get());
     mock_event_handler.DelegateToFake();
 
     EXPECT_CALL(mock_event_handler, OnEvent(_, _)).Times(1);
     EXPECT_CALL(mock_event_handler, IsBindedToSameFunctionAs(_)).Times(1);
 
-    mock_event_handler.OnEvent(nullptr, CustomArgumentStruct());
+    mock_event_handler.OnEvent(nullptr, ArgT());
     mock_event_handler.IsBindedToSameFunctionAs(nullptr);
 }
 
 TEST(EvenHandlerImplCallTest, test_on_call_void_member_function)
 {
-    MockExecutableEntity<CustomArgumentStruct> mock_exec_entity;
+    using ArgT = CustomArgumentStruct;
+    MockExecutableEntity<ArgT> mock_exec_entity;
     const auto function_event_handler =
         core::EventHandler::bind<decltype(mock_exec_entity)>(&mock_exec_entity,
                                                              &decltype(mock_exec_entity)::void_execute);
